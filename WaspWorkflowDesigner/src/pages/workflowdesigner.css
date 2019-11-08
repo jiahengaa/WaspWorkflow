@@ -1,0 +1,20 @@
+.normal {
+  background: #f279c0;
+}
+.boxCard {
+  position: absolute;
+  opacity: 0.8;
+  background: #fff;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: #666 0px 0px 10px;
+  padding-top: 3px;
+}
+.previewBox {
+  position: absolute;
+  opacity: 0.8;
+  top: 2px;
+  right: 2px;
+  border: 1px solid grey;
+  background-color: lightgrey;
+}

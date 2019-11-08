@@ -1,0 +1,9 @@
+{
+  "symbol_url": "//at.alicdn.com/t/font_1496759_2y6byg7x182.js",
+  "use_typescript": true,
+  "save_dir": "./src/iconfont",
+  "generate_mode": "all-in-one",
+  "trim_icon_prefix": "icon",
+  "default_icon_size": 30,
+  "summary_component_name": "Iconfont"
+}
