@@ -1543,6 +1543,15 @@ class WorkFlowDesigner extends Component {
   wfvmDescChange = (e: any): void => {
     this.state.workflowVM.desc = e.target.value;
   };
+  exportImg = (e: any) => {
+    let dataUrl = (this.refs.stage as any).toDataURL({ pixelRatio: 3 });
+    let link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'wf.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   saveWFOk = (e: any): void => {
     this.state.workflowVM.nodes = [];
     this.state.workflowVM.lines = [];
@@ -1787,6 +1796,7 @@ class WorkFlowDesigner extends Component {
       <div>
         <Table columns={this.columns} dataSource={this.state.workflowVMs} rowKey="id" />
         <Button type="primary" icon="save" onClick={this.wfSave}></Button>
+        <Button type="primary" icon="export" onClick={this.exportImg}></Button>
         <Stage
           width={this.stageConfig.width}
           height={this.stageConfig.height}
