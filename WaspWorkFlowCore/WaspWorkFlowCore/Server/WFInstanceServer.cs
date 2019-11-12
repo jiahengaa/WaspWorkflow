@@ -258,6 +258,7 @@ namespace WaspWorkFlowCore.Server
                         wFInstanceViewModel.Nodes[i].BType = wFInstanceViewModel.BType;
 
                     }
+                    wFInstanceViewModel.Nodes[i].Desc = wfInstance.Desc;
                     var nodeInstance = mapper.Map<WFNodeInstance>(wFInstanceViewModel.Nodes[i]);
                     nodeInstance.Id = Guid.NewGuid();
                     wFContext.WFNodeInstance.BulkInsert(new List<WFNodeInstance> { nodeInstance });

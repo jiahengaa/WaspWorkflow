@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29311.281
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkFlowExample", "WorkFlowExample\WorkFlowExample.csproj", "{0A8DB0FF-9A6A-44A6-9823-67CEC00A2011}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkFlowWebApi", "WorkFlowWebApi\WorkFlowWebApi.csproj", "{0A8DB0FF-9A6A-44A6-9823-67CEC00A2011}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaspWorkFlowCore", "WaspWorkFlowCore\WaspWorkFlowCore.csproj", "{CA444E89-BD4F-4A8B-AFDA-76D8F1F0332A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowExample", "WorkflowExample\WorkflowExample.csproj", "{5F5DCBCA-9C15-49B6-89A7-D41917F05A73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CA444E89-BD4F-4A8B-AFDA-76D8F1F0332A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA444E89-BD4F-4A8B-AFDA-76D8F1F0332A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA444E89-BD4F-4A8B-AFDA-76D8F1F0332A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F5DCBCA-9C15-49B6-89A7-D41917F05A73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F5DCBCA-9C15-49B6-89A7-D41917F05A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F5DCBCA-9C15-49B6-89A7-D41917F05A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F5DCBCA-9C15-49B6-89A7-D41917F05A73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

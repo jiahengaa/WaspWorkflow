@@ -46,5 +46,6 @@ namespace WaspWorkFlowCore.Models
         /// 单据类型，业务系统根据此字段判断BId去哪张表去查找单据
         /// </summary>
         public string BType { set; get; }
+        public string Desc { set; get; }
     }
 }
