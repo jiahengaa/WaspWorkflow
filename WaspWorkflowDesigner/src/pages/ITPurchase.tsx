@@ -5,7 +5,7 @@ import { Guid } from 'guid-typescript';
 import React, { Component } from 'react';
 import { ITPurchaseModel, AssetPuchase } from '../types/ITPurchaseModel';
 
-export class ITPurchase extends Component {
+class ITPurchase extends Component {
   state = {
     curLoginUser: {
       id: '',
@@ -50,3 +50,5 @@ export class ITPurchase extends Component {
     );
   }
 }
+
+export default ITPurchase;

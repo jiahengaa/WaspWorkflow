@@ -12,6 +12,10 @@ const config: IConfig = {
           component: './workflowdesigner',
         },
         {
+          path: '/ITPurchase',
+          component: './ITPurchase',
+        },
+        {
           path: '/',
           component: '../pages/index',
         },
