@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using WaspWorkFlowCore.IServer;
 using WaspWorkFlowCore.Models;
 using WaspWorkFlowCore.ViewModels;
-using WorkFlowExample.ViewModels;
+using WorkflowExample.ViewModels;
 
-namespace WorkFlowExample.Controllers
+namespace WorkflowExample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -139,7 +139,7 @@ namespace WorkFlowExample.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("CreateWFInstance")]
-        public WFInstanceViewModel CreateWFInstance([FromBody] WFInstanceViewModel viewModel,Guid userId,String userName)
+        public WFInstanceViewModel CreateWFInstance([FromBody] WFInstanceViewModel viewModel, Guid userId, String userName)
         {
             //解析token，获取用户id，用户名称
             return iWFInstanceServer.CreateWFInstance(viewModel, userId, userName);
@@ -158,7 +158,7 @@ namespace WorkFlowExample.Controllers
 
             if (wFSendObject.userConfigs != null)
             {
-                foreach(var item in wFSendObject.userConfigs)
+                foreach (var item in wFSendObject.userConfigs)
                 {
                     if (!nodeConfig.ContainsKey(item.NodeInstanceId))
                     {
