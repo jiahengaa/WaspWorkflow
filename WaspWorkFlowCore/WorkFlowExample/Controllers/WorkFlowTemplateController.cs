@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using WaspWorkFlowCore.IServer;
 using WaspWorkFlowCore.ViewModels;
 
-namespace WorkFlowExample.Controllers
+namespace WorkflowExample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
