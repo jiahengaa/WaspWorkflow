@@ -1,5 +1,6 @@
 import Konva from 'konva';
 import { Guid } from 'guid-typescript';
+import { CircleConfig } from 'konva/types/shapes/Circle';
 
 /**
  * the definition of node type
@@ -22,7 +23,43 @@ export enum NodeType {
    */
   End,
 }
-
+/// <summary>
+/// 单据状态
+/// </summary>
+export enum NodeState {
+  /// <summary>
+  /// Created
+  /// </summary>
+  Created = 0,
+  /// <summary>
+  /// Sent
+  /// </summary>
+  Sent = 1,
+  /// <summary>
+  /// WaitSend
+  /// </summary>
+  WaitSend = 2,
+  /// <summary>
+  /// Suspend
+  /// </summary>
+  Suspend = 3,
+  /// <summary>
+  /// BackSent
+  /// </summary>
+  BackSent = 4,
+  /// <summary>
+  /// BeBackSent
+  /// </summary>
+  BeBackSent = 5,
+  /// <summary>
+  /// Undefine
+  /// </summary>
+  Undefine = 6,
+  /// <summary>
+  /// Completed
+  /// </summary>
+  Completed = 7,
+}
 /**
  * the definition of  anchor type
  */
@@ -66,6 +103,14 @@ export class WFNode {
    */
   nodeType!: NodeType;
   /**
+   * node logs
+   */
+  nodeLogs!: [];
+  /**
+   * node state
+   */
+  state!: NodeState;
+  /**
    * audit user id (guid type)
    */
   userId!: string;
@@ -77,6 +122,14 @@ export class WFNode {
    * node description
    */
   desc!: string;
+}
+
+export class WFCheckBox {
+  nodeId: string = Guid.create().toString();
+  id: string = Guid.create().toString();
+  circleConfig: CircleConfig = { radius: 10, draggable: false };
+  checked: boolean = false;
+  disableCount: number = 0;
 }
 
 /**
@@ -211,6 +264,11 @@ export class WFLineVM {
 export class NodeVM {
   id: string = Guid.EMPTY;
   nodeType: NodeType = NodeType.Start;
+  /**
+   * node state
+   */
+  state!: NodeState;
+  nodeLogs!: [];
   userId: string = Guid.EMPTY;
   userName: string = '';
   desc: string = '';
