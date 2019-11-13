@@ -44,6 +44,31 @@ class ITPurchase extends Component {
   sendBillBack = (backNodes: string[], bill: ITPurchaseModel): void => {
     console.log(backNodes);
     console.log(bill);
+
+    var paras = {
+      wfInstanceId: this.state.curWFInstanceId,
+      nodeInstanceId: this.state.curNodeInstanceId,
+      bussinessInfo: bill,
+      options: '不同意',
+      userName: this.state.curLoginUser.name,
+      preNodes: backNodes,
+    };
+
+    fetch(baseUrl + '/WFEngine/Back', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json-patch+json',
+      },
+      body: JSON.stringify(paras),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(exp => {
+        console.log(exp);
+      });
   };
   assetSpecificationChange(e: any, item: AssetPuchase, index: number) {
     this.state.bill.assetItem[index].specifications = e.target.value;
@@ -200,10 +225,6 @@ class ITPurchase extends Component {
       curWFInstanceId: bill.wfInstanceId,
       billState: BillState.View,
     });
-
-    if (this.refs.wfview !== undefined) {
-      (this.refs.wfView as WFView).updateView();
-    }
   };
   sendBill = (ev: any, record: ITPurchaseInfo) => {
     var para = {

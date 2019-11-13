@@ -353,8 +353,12 @@ export class WFBack extends React.Component<{
   render() {
     return (
       <div>
-        <Button type="primary" icon="save" onClick={this.btnOk}></Button>
-        <Button type="primary" icon="export" onClick={this.btnCancle}></Button>
+        <Button type="primary" icon="save" onClick={this.btnOk}>
+          确定
+        </Button>
+        <Button type="primary" icon="export" onClick={this.btnCancle}>
+          取消
+        </Button>
 
         <Stage
           width={this.stageConfig.width}
