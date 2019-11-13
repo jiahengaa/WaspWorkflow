@@ -52,7 +52,7 @@ namespace WorkflowExample.Servers
                     }
                 }
             }
-
+            exampleContext.SaveChanges();
             wFContext.SaveChanges();
 
             wFInstanceView.Desc = $"{viewModel.ApplicantName}发起采购申请，总金额{viewModel.EstimatedAmount}";
