@@ -10,9 +10,10 @@ import { ClickParam } from 'antd/lib/menu';
 import { KonvaEventObject } from 'konva/types/Node';
 
 export class WFBack extends React.Component<{
-  sendBackCallBack: (backNodes: string[]) => void;
+  sendBackCallBack: (backNodes: string[], bill: any) => void;
   currentNodeId: string;
   curWorkflowId: string;
+  bill: any;
 }> {
   stageConfig = {
     width: window.innerWidth,
@@ -27,9 +28,34 @@ export class WFBack extends React.Component<{
     backChecks: [],
   };
 
-  constructor(props: any) {
+  sendBackCallBack: (backNodes: string[], bill: any) => void;
+  currentNodeId: string = '';
+  curWorkflowId: string = '';
+  bill: any;
+
+  constructor(props: {
+    sendBackCallBack: (backNodes: string[], bill: any) => void;
+    currentNodeId: string;
+    curWorkflowId: string;
+    bill: any;
+  }) {
     super(props);
+    this.sendBackCallBack = props.sendBackCallBack;
+    this.currentNodeId = props.currentNodeId;
+    this.curWorkflowId = props.curWorkflowId;
+    this.bill = props.bill;
   }
+
+  componentWillReceiveProps = (nextProps: {
+    sendBackCallBack: (backNodes: string[], bill: any) => void;
+    currentNodeId: string;
+    curWorkflowId: string;
+  }) => {
+    this.sendBackCallBack = nextProps.sendBackCallBack;
+    this.currentNodeId = nextProps.currentNodeId;
+    this.curWorkflowId = nextProps.curWorkflowId;
+    this.getWFData();
+  };
 
   btnOk = (e: any) => {
     var checkedBKNodes = this.state.backChecks.filter(p => p.checked === true);
@@ -43,7 +69,7 @@ export class WFBack extends React.Component<{
       backNodeIds.push(ele.nodeId);
     });
 
-    this.props.sendBackCallBack(backNodeIds);
+    this.sendBackCallBack(backNodeIds, this.bill);
   };
 
   btnCancle = (e: any) => {};
@@ -137,23 +163,48 @@ export class WFBack extends React.Component<{
     }
   };
 
-  componentDidMount() {
+  getWFData = () => {
     if (
-      this.props.curWorkflowId === Guid.EMPTY ||
-      this.props.curWorkflowId === '' ||
-      this.props.curWorkflowId === undefined ||
-      this.props.curWorkflowId === null
+      this.curWorkflowId === Guid.EMPTY ||
+      this.curWorkflowId === '' ||
+      this.curWorkflowId === undefined ||
+      this.curWorkflowId === null
     ) {
       return;
     }
 
-    fetch(baseUrl + 'api/WFEngine/GetWFInstanceById?id=' + this.props.curWorkflowId)
+    fetch(baseUrl + '/WFEngine/GetWFInstanceById?id=' + this.curWorkflowId)
       .then(res => res.json())
       .then(res => {
         console.log(res);
-        this.state.nodes = res.nodes;
-        this.state.lines = res.lines;
-        this.state.nodeDescriptors = res.nodeDescriptors;
+        this.state.nodes = [];
+        this.state.lines = [];
+        res.nodes.forEach((node: any) => {
+          let curNode = new WFNode();
+          curNode.circleConfig = JSON.parse(node.nodeDefine.circleConfigJson);
+          curNode.id = node.nodeDefine.id;
+          curNode.nodeLogs = JSON.parse(node.actionLogs);
+          curNode.desc = node.desc;
+          curNode.state = node.state;
+          curNode.nodeType = node.nodeDefine.nodeType;
+          curNode.userId = node.userId;
+          curNode.userName = node.userName;
+          (this.state.nodes as WFNode[]).push(curNode);
+        });
+
+        res.lines.forEach((line: any) => {
+          let curLine = new WFArrowLine();
+          let lineObj = JSON.parse(line.lineJson);
+          curLine.id = lineObj.Id;
+          curLine.conditionFuncStr = lineObj.ConditionFuncStr;
+          curLine.desc = lineObj.Desc;
+          curLine.eNodeId = lineObj.ENodeId;
+          curLine.lineConfig = JSON.parse(line.lineDefine.lineConfigJson);
+          curLine.nodeCode = lineObj.NodeCode;
+          curLine.sNodeId = lineObj.SNodeId;
+          (this.state.lines as WFArrowLine[]).push(curLine);
+        });
+        this.state.nodeDescriptors = [];
         this.state.backChecks = [];
         this.setWFState();
 
@@ -167,6 +218,10 @@ export class WFBack extends React.Component<{
       .catch(exp => {
         console.log(exp);
       });
+  };
+
+  componentDidMount() {
+    this.getWFData();
   }
 
   setWFState = () => {
@@ -180,6 +235,13 @@ export class WFBack extends React.Component<{
       nodeDes.shapeType = 'WFNode';
       nodeDes.tipType = 'desciptor';
       nodeDes.labelConfig = {
+        id: Guid.create().toString(),
+        x: node.circleConfig.x,
+        y: node.circleConfig.y,
+        visible: true,
+        opacity: 0.75,
+      };
+      nodeDes.tagConfig = {
         fill: 'green',
         pointerDirection: 'down',
         pointerWidth: 0,
@@ -187,9 +249,9 @@ export class WFBack extends React.Component<{
         lineJoin: 'round',
         shadowColor: 'green',
         shadowBlur: 10,
-        shadowOffsetX: 10,
-        shadowOffsetY: 10,
-        shadowOpacity: 0.5,
+        shadowOffsetX: 0,
+        shadowOffsetY: 0,
+        shadowOpacity: 0,
       };
       nodeDes.textConfig = {
         text: node.userName + '：送审',
@@ -201,17 +263,18 @@ export class WFBack extends React.Component<{
 
       if (node.state === NodeState.Undefine) {
         node.circleConfig.fill = '#d3d3d3';
-      } else if (
-        node.state === NodeState.Created ||
-        node.state === NodeState.Sent ||
-        node.state === NodeState.Completed
-      ) {
-        node.circleConfig.fill = '#d3d3d3';
-        if (node.state === NodeState.Created) {
-          nodeDes.textConfig.text = '开始';
+        if (node.nodeType === NodeType.End) {
+          nodeDes.textConfig.text = '结束';
+          node.circleConfig.fill = 'darkblack';
+          (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
         }
-        if (node.id === this.props.currentNodeId) {
+      } else if (node.state === NodeState.Created) {
+        nodeDes.textConfig.text = '开始';
+        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
+      } else if (node.state === NodeState.Sent || node.state === NodeState.Completed) {
+        if (node.id === this.currentNodeId) {
           nodeDes.textConfig.text = '你在这里！';
+          (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
         }
         if (
           node.state === NodeState.Completed &&
@@ -220,48 +283,35 @@ export class WFBack extends React.Component<{
         ) {
           node.circleConfig.fill = 'gray';
         }
-        if (
-          (node.nodeLogs.length === 0 && node.state === NodeState.Completed) ||
-          node.nodeType === NodeType.Start
-        ) {
-          return;
-        }
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.WaitSend) {
         node.circleConfig.fill = '#d39282';
         nodeDes.textConfig.text = node.userName + ':待处理！';
-        if (node.id === that.props.currentNodeId) {
+        if (node.id === that.currentNodeId) {
           node.circleConfig.fill = 'blue';
           nodeDes.textConfig.text = '你在这里！';
         }
         (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.Suspend) {
         node.circleConfig.fill = '#008B8B';
-
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.BackSent) {
         node.circleConfig.fill = '#CDCD00';
       } else if (node.state === NodeState.BeBackSent) {
         node.circleConfig.fill = 'red';
         nodeDes.textConfig.text = node.userName + ':待处理！';
-        if (node.id === that.props.currentNodeId) {
+        if (node.id === that.currentNodeId) {
           nodeDes.textConfig.text = '你在这里！';
         }
         (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
-      } else if (node.nodeType === NodeType.End) {
-        nodeDes.textConfig.text = '结束';
-        node.circleConfig.fill = 'darkblack';
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       }
     });
-    this.buildChecks();
+    this.initChecks();
   };
 
-  buildChecks = () => {
-    let cur = this.state.nodes.find(p => p.id === this.props.currentNodeId);
-    this.createChecks(cur?.id);
+  initChecks = () => {
+    let cur = this.state.nodes.find(p => p.id === this.currentNodeId);
+    this.buildChecks(cur?.id);
   };
-  createChecks = (nodeId: string | undefined) => {
+  buildChecks = (nodeId: string | undefined) => {
     var that = this;
     var preLines = this.state.lines.filter(line => line.eNodeId === nodeId);
     if (preLines !== undefined) {
@@ -285,13 +335,15 @@ export class WFBack extends React.Component<{
                     id: Guid.create().toString(),
                     scaleX: 1,
                     scaleY: 1,
+                    x: nd.circleConfig.x,
+                    y: nd.circleConfig.y,
                   },
                 });
-                that.createChecks(nd.id);
+                that.buildChecks(nd.id);
               }
             }
           } else if (nd.nodeType === NodeType.Condition) {
-            that.createChecks(nd.id);
+            that.buildChecks(nd.id);
           }
         });
       });
@@ -330,7 +382,7 @@ export class WFBack extends React.Component<{
             {this.state.lines.map((line, i) => {
               return (
                 <Arrow
-                  key={line.id}
+                  key={i}
                   id={line.id}
                   points={line.lineConfig.points}
                   stroke={line.lineConfig.stroke}

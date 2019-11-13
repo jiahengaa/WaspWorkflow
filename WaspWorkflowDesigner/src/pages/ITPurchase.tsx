@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { ITPurchaseModel, AssetPuchase, ITPurchaseInfo } from '../types/ITPurchaseModel';
 
 import { WFView } from '../components/wfview';
+import { WFBack } from '../components/wfback';
 
 enum BillState {
   Create,
@@ -39,6 +40,10 @@ class ITPurchase extends Component {
           console.log(exp);
         });
     }
+  };
+  sendBillBack = (backNodes: string[], bill: ITPurchaseModel): void => {
+    console.log(backNodes);
+    console.log(bill);
   };
   assetSpecificationChange(e: any, item: AssetPuchase, index: number) {
     this.state.bill.assetItem[index].specifications = e.target.value;
@@ -106,6 +111,7 @@ class ITPurchase extends Component {
     billState: BillState.Undefine,
     curWFInstanceId: '',
     curNodeInstanceId: '',
+    sendBackView: false,
   };
 
   columns = [
@@ -188,9 +194,7 @@ class ITPurchase extends Component {
   getAllFinishedBills = (e: any) => {};
   handleView = (e: any, bill: ITPurchaseInfo) => {
     this.setState({
-      billState: BillState.Undefine,
-    });
-    this.setState({
+      sendBackView: false,
       bill: bill.itPurchaseViewModel,
       curNodeInstanceId: bill.nodeInstanceId,
       curWFInstanceId: bill.wfInstanceId,
@@ -228,7 +232,12 @@ class ITPurchase extends Component {
       });
   };
   backBill = (ev: any, record: ITPurchaseInfo) => {
-    throw new Error('Method not implemented.');
+    this.setState({
+      sendBackView: true,
+      bill: record.itPurchaseViewModel,
+      curNodeInstanceId: record.nodeInstanceId,
+      curWFInstanceId: record.wfInstanceId,
+    });
   };
   userIdChange = (e: any) => {
     this.setState({
@@ -441,6 +450,21 @@ class ITPurchase extends Component {
     }
   };
 
+  wfBackShow = () => {
+    if (this.state.sendBackView) {
+      return (
+        <WFBack
+          sendBackCallBack={this.sendBillBack}
+          currentNodeId={this.state.curNodeInstanceId}
+          curWorkflowId={this.state.curWFInstanceId}
+          bill={this.state.bill}
+        ></WFBack>
+      );
+    } else {
+      return;
+    }
+  };
+
   render() {
     const userId = this.state.curLoginUser.id;
     const userName = this.state.curLoginUser.name;
@@ -482,6 +506,7 @@ class ITPurchase extends Component {
         <Button onClick={this.btnSave}>保存</Button>
         {this.billTable()}
         {this.wfViewShow()}
+        {this.wfBackShow()}
       </div>
     );
   }
