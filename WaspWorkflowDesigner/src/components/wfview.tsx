@@ -15,6 +15,7 @@ interface IWFViewProps extends React.Props<any> {
 export class WFView extends React.Component<IWFViewProps> {
   constructor(props: IWFViewProps) {
     super(props);
+    this.state.wFViewProps = props;
   }
 
   state = {
@@ -26,30 +27,64 @@ export class WFView extends React.Component<IWFViewProps> {
       height: window.innerHeight,
       draggable: true,
     },
+    wFViewProps: {
+      currentNodeId: '',
+      curWorkflowId: '',
+      bill: {},
+    },
   };
 
-  componentDidMount() {
+  componentWillReceiveProps = (nextProps: IWFViewProps) => {
+    this.state.wFViewProps = nextProps;
+    this.getWFData();
+  };
+
+  getWFData = () => {
     if (
-      this.props.curWorkflowId === Guid.EMPTY ||
-      this.props.curWorkflowId === '' ||
-      this.props.curWorkflowId === undefined ||
-      this.props.curWorkflowId === null
+      this.state.wFViewProps.curWorkflowId === Guid.EMPTY ||
+      this.state.wFViewProps.curWorkflowId === '' ||
+      this.state.wFViewProps.curWorkflowId === undefined ||
+      this.state.wFViewProps.curWorkflowId === null
     ) {
       return;
     }
 
-    fetch(baseUrl + 'api/WFEngine/GetWFInstanceById?id=' + this.props.curWorkflowId)
+    fetch(baseUrl + '/WFEngine/GetWFInstanceById?id=' + this.state.wFViewProps.curWorkflowId)
       .then(res => res.json())
       .then(res => {
-        console.log(res);
-        this.state.nodes = res.nodes;
-        this.state.lines = res.lines;
-        this.state.nodeDescriptors = res.nodeDescriptors;
+        this.state.nodes = [];
+        this.state.lines = [];
+
+        res.nodes.forEach((node: any) => {
+          let curNode = new WFNode();
+          curNode.circleConfig = JSON.parse(node.nodeDefine.circleConfigJson);
+          curNode.id = node.nodeDefine.id;
+          curNode.nodeLogs = JSON.parse(node.actionLogs);
+          curNode.desc = node.desc;
+          curNode.state = node.state;
+          curNode.nodeType = node.nodeDefine.nodeType;
+          curNode.userId = node.userId;
+          curNode.userName = node.userName;
+          (this.state.nodes as WFNode[]).push(curNode);
+        });
+
+        res.lines.forEach((line: any) => {
+          let curLine = new WFArrowLine();
+          curLine = JSON.parse(line.lineJson);
+          curLine.lineConfig = JSON.parse(line.lineDefine.lineConfigJson);
+          (this.state.lines as WFArrowLine[]).push(curLine);
+        });
+
+        this.state.nodeDescriptors = [];
         this.setWFState();
       })
       .catch(exp => {
         console.log(exp);
       });
+  };
+
+  componentDidMount() {
+    this.getWFData();
   }
 
   setWFState = (): void => {
@@ -90,17 +125,18 @@ export class WFView extends React.Component<IWFViewProps> {
 
       if (node.state === NodeState.Undefine) {
         node.circleConfig.fill = '#d3d3d3';
-      } else if (
-        node.state === NodeState.Created ||
-        node.state === NodeState.Sent ||
-        node.state === NodeState.Completed
-      ) {
-        node.circleConfig.fill = '#d3d3d3';
-        if (node.state === NodeState.Created) {
-          nodeDes.textConfig.text = '开始';
+        if (node.nodeType === NodeType.End) {
+          nodeDes.textConfig.text = '结束';
+          node.circleConfig.fill = 'darkblack';
+          (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
         }
-        if (node.id === this.props.currentNodeId) {
+      } else if (node.state === NodeState.Created) {
+        nodeDes.textConfig.text = '开始';
+        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
+      } else if (node.state === NodeState.Sent || node.state === NodeState.Completed) {
+        if (node.id === this.state.wFViewProps.currentNodeId) {
           nodeDes.textConfig.text = '你在这里！';
+          (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
         }
         if (
           node.state === NodeState.Completed &&
@@ -109,37 +145,24 @@ export class WFView extends React.Component<IWFViewProps> {
         ) {
           node.circleConfig.fill = 'gray';
         }
-        if (
-          (node.nodeLogs.length === 0 && node.state === NodeState.Completed) ||
-          node.nodeType === NodeType.Start
-        ) {
-          return;
-        }
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.WaitSend) {
         node.circleConfig.fill = '#d39282';
         nodeDes.textConfig.text = node.userName + ':待处理！';
-        if (node.id === that.props.currentNodeId) {
+        if (node.id === that.state.wFViewProps.currentNodeId) {
           node.circleConfig.fill = 'blue';
           nodeDes.textConfig.text = '你在这里！';
         }
         (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.Suspend) {
         node.circleConfig.fill = '#008B8B';
-
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       } else if (node.state === NodeState.BackSent) {
         node.circleConfig.fill = '#CDCD00';
       } else if (node.state === NodeState.BeBackSent) {
         node.circleConfig.fill = 'red';
         nodeDes.textConfig.text = node.userName + ':待处理！';
-        if (node.id === that.props.currentNodeId) {
+        if (node.id === that.state.wFViewProps.currentNodeId) {
           nodeDes.textConfig.text = '你在这里！';
         }
-        (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
-      } else if (node.nodeType === NodeType.End) {
-        nodeDes.textConfig.text = '结束';
-        node.circleConfig.fill = 'darkblack';
         (that.state.nodeDescriptors as WFTip[]).push(nodeDes);
       }
     });
@@ -210,7 +233,7 @@ export class WFView extends React.Component<IWFViewProps> {
             {this.state.lines.map((line: WFArrowLine, i) => {
               return (
                 <Arrow
-                  key={line.id}
+                  key={i}
                   id={line.id}
                   points={line.lineConfig.points}
                   stroke={line.lineConfig.stroke}

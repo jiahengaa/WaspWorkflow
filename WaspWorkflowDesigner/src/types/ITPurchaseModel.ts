@@ -10,7 +10,7 @@ export class ITPurchaseModel {
   departmentName: string = '';
   projectId: string = Guid.EMPTY;
   projectName: string = '';
-  createTime: number = 0;
+  createTime: number = 12345678;
   estimatedAmount: number = 0;
   count: number = 0;
   hadCount: number = 0;
@@ -34,4 +34,11 @@ export class AssetPuchase {
   purchaseQuantity: number = 0;
   estimatedAmount: number = 0;
   inventoryOnHand: number = 0;
+}
+
+export class ITPurchaseInfo {
+  wfInstanceId: string = Guid.EMPTY;
+  nodeInstanceId: string = Guid.EMPTY;
+  desc: string = '';
+  itPurchaseViewModel: ITPurchaseModel = new ITPurchaseModel();
 }

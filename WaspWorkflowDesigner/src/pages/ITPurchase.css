@@ -1,0 +1,51 @@
+.titleTop {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.titleLayer {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.CellInput:hover {
+  border-radius: 0px;
+  border: none;
+  box-shadow: none;
+  padding: 0px;
+}
+.CellInput {
+  border-radius: 0px;
+  border: none;
+  box-shadow: none;
+  padding: 0px;
+  margin: 0px;
+}
+.CellInput:focus {
+  border-radius: 0px;
+  border: none;
+  box-shadow: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+.CellTitle {
+  border: 1px solid lightgrey;
+
+  margin-right: -1px;
+  margin-bottom: -1px;
+  height: 38px;
+  display: flex;
+  /*实现垂直居中*/
+  align-items: center;
+  /*实现水平居中*/
+  justify-content: center;
+}
+
+.cellTable {
+  margin: 10px;
+}
+
+.cellHeight {
+  height: 34px;
+}
