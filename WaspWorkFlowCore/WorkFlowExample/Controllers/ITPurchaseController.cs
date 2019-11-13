@@ -56,7 +56,7 @@ namespace WorkflowExample.Controllers
                 slist.Add(new ITPurchaseInfo()
                 {
                     WFInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFInstanceId,
-                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).Id,
+                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFNodeId,
                     Desc = wfs.FirstOrDefault(p=>p.BId == item.Id)?.Desc,
                     ITPurchaseViewModel = item
                 });
@@ -79,7 +79,7 @@ namespace WorkflowExample.Controllers
                 slist.Add(new ITPurchaseInfo()
                 {
                     WFInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFInstanceId,
-                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).Id,
+                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFNodeId,
                     Desc = wfs.FirstOrDefault(p => p.BId == item.Id)?.Desc,
                     ITPurchaseViewModel = item
                 });
@@ -101,7 +101,7 @@ namespace WorkflowExample.Controllers
                 slist.Add(new ITPurchaseInfo()
                 {
                     WFInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFInstanceId,
-                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).Id,
+                    NodeInstanceId = stalist.FirstOrDefault(p => p.BId == item.Id).WFNodeId,
                     Desc = wfs.FirstOrDefault(p => p.BId == item.Id)?.Desc,
                     ITPurchaseViewModel = item
                 });
