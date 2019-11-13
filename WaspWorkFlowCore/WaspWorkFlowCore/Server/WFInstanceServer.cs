@@ -293,7 +293,7 @@ namespace WaspWorkFlowCore.Server
             }
 
             //找出节点，找出输出线，计算输出
-            var curNode = wf.Nodes.FirstOrDefault(p => p.Id == nodeInstanceId);
+            var curNode = wf.Nodes.FirstOrDefault(p => p.NodeDefine.Id == nodeInstanceId);
             if (curNode == null)
             {
                 return false;
@@ -501,7 +501,7 @@ namespace WaspWorkFlowCore.Server
             }
 
             //找出节点，找出输出线，计算输出
-            var curNode = wf.Nodes.FirstOrDefault(p => p.Id == nodeInstanceId);
+            var curNode = wf.Nodes.FirstOrDefault(p => p.NodeDefine.Id == nodeInstanceId);
             if (curNode == null)
             {
                 return false;
@@ -713,7 +713,7 @@ namespace WaspWorkFlowCore.Server
                 return false;
             }
 
-            var curNode = wf.Nodes.FirstOrDefault(p => p.Id == nodeInstanceId);
+            var curNode = wf.Nodes.FirstOrDefault(p => p.NodeDefine.Id == nodeInstanceId);
             if (curNode == null)
             {
                 return false;
