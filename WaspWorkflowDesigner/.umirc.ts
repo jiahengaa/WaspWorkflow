@@ -16,6 +16,10 @@ const config: IConfig = {
           component: './ITPurchase',
         },
         {
+          path: '/pipiTable',
+          component: './pipiTable',
+        },
+        {
           path: '/',
           component: '../pages/index',
         },

@@ -13,12 +13,14 @@
     "dva": "^2.6.0-beta.6",
     "guid-typescript": "^1.0.9",
     "konva": "^4.0.16",
+    "node-sass": "^4.13.0",
     "react": "^16.8.6",
     "react-ace": "^8.0.0",
     "react-dom": "^16.8.6",
     "react-konva": "^16.10.1-0",
     "react-native-svg": "^9.13.3",
-    "react-native-web": "^0.11.7"
+    "react-native-web": "^0.11.7",
+    "sass-loader": "^8.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.3.12",

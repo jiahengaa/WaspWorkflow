@@ -1,0 +1,12 @@
+.Cell {
+  border: 1px solid lightgrey;
+
+  margin-right: -1px;
+  margin-bottom: -1px;
+  height: 38px;
+  display: flex;
+  /*实现垂直居中*/
+  align-items: center;
+  /*实现水平居中*/
+  justify-content: center;
+}
