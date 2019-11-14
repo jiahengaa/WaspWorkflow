@@ -26,6 +26,9 @@ export class CellX extends React.Component<{ cell: Cell }, { data: any }> {
     return this.buildCell(this.props.cell, 0);
   };
 
+  preLevel: number = 0;
+  level: number = 0;
+
   buildCell = (cell: Cell, index: number): JSX.Element => {
     let content;
     if (cell.type === CellType.Text) {
@@ -70,13 +73,20 @@ export class CellX extends React.Component<{ cell: Cell }, { data: any }> {
         return c.colStart - d.colStart;
       });
 
+    this.preLevel = this.level;
     cell.child.forEach((c, index) => {
       let curContent = this.buildCell(c, index);
 
       if (!(curContent instanceof String)) {
-        content.push(curContent as JSX.Element);
+        if (this.preLevel === this.level) {
+          content.push(curContent as JSX.Element);
+        } else {
+          content.push(<Row key={index}>{curContent as JSX.Element}</Row>);
+        }
       }
     });
+
+    this.level++;
 
     return content;
   };
