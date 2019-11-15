@@ -8,8 +8,14 @@ export enum CellType {
   Custom,
 }
 
+export enum DataType{
+  Normal,
+  List
+}
+
 export class Cell {
   value: string = '';
+  dataType:DataType=DataType.Normal;
   type: CellType = CellType.Text;
   rowStart: number = 0;
   colStart: number = 0;
@@ -41,11 +47,18 @@ export class CellX extends React.Component<{ cell: Cell }, { data: any }> {
     }
 
     if (cell.type === CellType.Custom) {
-      return (
-        <Col className={styles.Cell} span={cell.colSpan} key={index}>
-          {cell.render()}
-        </Col>
-      );
+      if(cell.dataType === DataType.Normal){
+        return (
+          <Col className={styles.Cell} span={cell.colSpan} key={index}>
+            {cell.render()}
+          </Col>
+        );
+      }else{
+        return (
+          cell.render()
+        )
+      }
+      
     }
 
     let childContent;
@@ -79,7 +92,13 @@ export class CellX extends React.Component<{ cell: Cell }, { data: any }> {
 
       if (!(curContent instanceof String)) {
         if (this.preLevel === this.level) {
-          content.push(curContent as JSX.Element);
+          if(cell.dataType === DataType.List){
+            content.push(<Row key={index}>{curContent as JSX.Element}</Row>);  
+          }
+          else{
+            content.push(curContent as JSX.Element);
+          }
+          
         } else {
           content.push(<Row key={index}>{curContent as JSX.Element}</Row>);
         }
