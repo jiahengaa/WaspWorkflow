@@ -20,6 +20,10 @@ const config: IConfig = {
           component: './pipiTable',
         },
         {
+          path: '/XTable',
+          component: './XTable',
+        },
+        {
           path: '/',
           component: '../pages/index',
         },

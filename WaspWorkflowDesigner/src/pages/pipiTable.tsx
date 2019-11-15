@@ -3,7 +3,23 @@ import React from 'react';
 import styles from './pipiTable.css';
 import { CellX, Cell, CellType, DataType } from '../components/CellX';
 import cellStyles from '../components/CellX.scss';
-import { Button, Col, Modal, Input, Row, Table, Tooltip, Upload, Select, DatePicker } from 'antd';
+import {
+  Button,
+  Col,
+  Modal,
+  Input,
+  Row,
+  Table,
+  Tooltip,
+  Upload,
+  Select,
+  DatePicker,
+  Card,
+} from 'antd';
+
+const root = {
+  margin: '50px',
+};
 
 export default class PipiTable extends React.Component {
   constructor(props: any) {
@@ -44,7 +60,7 @@ export default class PipiTable extends React.Component {
 
   componentDidMount() {
     this.state.cell.child.push({
-      value: 'firsPart',
+      value: '第一栏',
       type: CellType.Group,
       dataType: DataType.Normal,
       rowStart: 0,
@@ -121,7 +137,7 @@ export default class PipiTable extends React.Component {
       ],
     });
     this.state.cell.child.push({
-      value: 'secondPard',
+      value: 'tableHead',
       dataType: DataType.Normal,
       type: CellType.Group,
       rowStart: 0,
@@ -240,7 +256,7 @@ export default class PipiTable extends React.Component {
       child: [],
     });
     this.state.cell.child.push({
-      value: '合计',
+      value: '合计栏',
       dataType: DataType.Normal,
       type: CellType.Group,
       rowStart: 0,
@@ -326,6 +342,10 @@ export default class PipiTable extends React.Component {
   }
 
   render() {
-    return <CellX cell={this.state.cell} />;
+    return (
+      <div style={root}>
+        <CellX cell={this.state.cell} />
+      </div>
+    );
   }
 }
