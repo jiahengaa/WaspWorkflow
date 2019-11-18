@@ -24,6 +24,10 @@ const config: IConfig = {
           component: './XTable2',
         },
         {
+          path: '/XTable3',
+          component: './XTable3',
+        },
+        {
           path: '/XTable',
           component: './XTable',
         },

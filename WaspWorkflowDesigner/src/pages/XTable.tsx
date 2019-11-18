@@ -144,69 +144,6 @@ export default class XTable extends React.Component {
       ],
     });
 
-    // this.state.cell.child.push({
-    //   text: '复合栏',
-    //   type: CellType.Group,
-    //   span: 24,
-    //   child: [
-    //     {
-    //       text: '详情表',
-    //       className: styles.title,
-    //       span: 2,
-    //     },
-    //     {
-    //       text: '第三栏：datalist',
-    //       type: CellType.InnerCell,
-    //       span: 22,
-    //       render: () => {
-    //         let childTable = new Cell();
-    //         childTable.type = CellType.Group;
-    //         childTable.span = 24;
-    //         childTable.child = [];
-
-    //         this.state.dogFoods.forEach((f, index) => {
-    //           childTable.child?.push({
-    //             span: 24,
-    //             type: CellType.Group,
-    //             child: [
-    //               {
-    //                 text: f.name.toString(),
-    //                 span: 2,
-    //               },
-    //               {
-    //                 text: f.type.toString(),
-    //                 span: 4,
-    //               },
-    //               {
-    //                 text: f.amount.toString(),
-    //                 span: 4,
-    //               },
-    //               {
-    //                 text: f.address.toString(),
-    //                 span: 4,
-    //               },
-    //               {
-    //                 text: f.tel.toString(),
-    //                 span: 2,
-    //               },
-    //               {
-    //                 text: f.desc.toString(),
-    //                 span: 4,
-    //               },
-    //               {
-    //                 text: f.bak.toString(),
-    //                 span: 4,
-    //               },
-    //             ],
-    //           });
-    //         });
-
-    //         return <GridCell cell={childTable} inner={true} />;
-    //       },
-    //     },
-    //   ],
-    // });
-
     this.state.cell.child.push({
       text: '第三栏：datalist',
       type: CellType.InnerCell,

@@ -1,6 +1,8 @@
 import styles from './GridCell.scss';
-import React from 'react';
-import { Col, Row } from 'antd';
+import React, { CSSProperties } from 'react';
+import { Col, Row, Input, Select } from 'antd';
+import { InputProps } from 'antd/lib/input';
+import { InputState } from 'antd/lib/input/Input';
 
 export enum CellType {
   Text,
@@ -24,7 +26,29 @@ export class Cell {
   render?: Function;
   child?: Cell[] = [];
   className?: string = '';
+  style?: CSSProperties;
 }
+
+// export class CellInput extends React.Component {
+//   render() {
+//     return (
+//       <Input
+//         style={{ borderRadius: '0px', border: 'none', boxShadow: 'none', padding: '0px' }}
+//       ></Input>
+//     );
+//   }
+// }
+
+// export class CellSelect extends React.Component {
+//   render() {
+//     return (
+//       <Select
+//         defaultValue="adddaaaaaaa"
+//         style={{ borderRadius: '0px', border: 'none', boxShadow: 'none', padding: '0px' }}
+//       ></Select>
+//     );
+//   }
+// }
 
 export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
   constructor(props: { cell: Cell; inner?: boolean }) {
@@ -43,8 +67,10 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
   buildCell = (cell: Cell, index: number): JSX.Element => {
     if (cell.type === CellType.Text || cell.type === undefined) {
       return (
-        <Col span={cell.span} key={index} className={cell.className}>
-          <div>{cell.text}</div>
+        <Col span={cell.span} key={index}>
+          <div className={cell.className} style={cell.style}>
+            {cell.text}
+          </div>
         </Col>
       );
     }
@@ -52,12 +78,22 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
     if (cell.type === CellType.Custom) {
       if (cell.dataType === DataType.Default || cell.dataType === undefined) {
         return (
-          <Col span={cell.span} key={index} className={cell.className}>
-            <div>{cell.render === undefined ? '' : cell.render()}</div>
+          <Col span={cell.span} key={index}>
+            <div className={cell.className} style={cell.style}>
+              {cell.render === undefined ? '' : cell.render()}
+            </div>
           </Col>
         );
       } else {
-        return cell.render === undefined ? '' : cell.render();
+        return (
+          <Row gutter={[1, 1]} key={index}>
+            <Col span={cell.span} key={index}>
+              <div className={styles.specialDiv} style={cell.style}>
+                {cell.render === undefined ? '' : cell.render()}
+              </div>
+            </Col>
+          </Row>
+        );
       }
     }
 
@@ -76,13 +112,25 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
       }
     }
 
-    return (
-      <Row gutter={[1, 1]} key={index} className={cell.className}>
-        {childContent?.map(ct => {
-          return ct;
-        })}
-      </Row>
-    );
+    if (cell.dataType === DataType.Default || cell.dataType === undefined) {
+      return (
+        <Row gutter={[1, 1]} key={index} className={cell.className} style={cell.style}>
+          {childContent?.map(ct => {
+            return ct;
+          })}
+        </Row>
+      );
+    } else {
+      return (
+        <Col span={cell.span} key={index} style={{ marginBottom: '-1px' }}>
+          <div className={styles.specialDiv} style={cell.style}>
+            {childContent?.map(ct => {
+              return ct;
+            })}
+          </div>
+        </Col>
+      );
+    }
   };
 
   buildGroup = (cell: Cell): JSX.Element[] => {
