@@ -1,0 +1,25 @@
+[class~='ant-col'] {
+  background: transparent;
+  border: 0;
+}
+[class~='ant-col'] > div {
+  background: white;
+  height: 32px;
+  line-height: 32px;
+  font-size: 13px;
+}
+
+.defaultGrid {
+  background-color: lightgray;
+  padding: 1px;
+}
+
+.innerGrid {
+  background-color: lightgray;
+  margin: 1px;
+  padding: 0px;
+  // margin-top: 1px;
+  // margin-left: 1px;
+  // margin-right: 1px;
+  // margin-bottom: 1px;
+}
