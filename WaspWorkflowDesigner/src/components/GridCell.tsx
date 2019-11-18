@@ -57,6 +57,7 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
           </Col>
         );
       } else {
+        return cell.render === undefined ? '' : cell.render();
       }
     }
 
