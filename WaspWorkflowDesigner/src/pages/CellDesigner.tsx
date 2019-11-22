@@ -64,7 +64,7 @@ const getGroupXCell = (): XCell => {
       {
         id: Guid.create(),
         cell: {
-          text: 'some text',
+          text: 'some',
           type: CellType.Text,
           dataType: DataType.Default, //横向布局为Default，纵向布局为List
           span: 4, //根据需要调整
@@ -316,7 +316,7 @@ export default class CellDesigner extends React.Component {
                             {...provided.droppableProps}
                             style={getListStyle(snapshot.isDraggingOver)}
                           >
-                            {cell.cell.text}
+                            <Col span={cell.cell.span}>{cell.cell.text}</Col>
                           </div>
                           {provided.placeholder}
                         </Row>
@@ -325,12 +325,12 @@ export default class CellDesigner extends React.Component {
                   ) : (
                     <Droppable key={cell.id.toString()} droppableId={cell.id.toString()}>
                       {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                        <Row
-                          gutter={[1, 1]}
-                          key={cell.id.toString()}
-                          style={{ border: '1px dashed brown' }}
-                        >
-                          <div ref={provided.innerRef} {...provided.droppableProps}>
+                        <Row gutter={[1, 1]} key={cell.id.toString()}>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                          >
                             {this.buildGroup(cell)}
                           </div>
                           {provided.placeholder}
