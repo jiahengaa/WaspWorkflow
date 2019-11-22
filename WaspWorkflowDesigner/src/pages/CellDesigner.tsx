@@ -71,6 +71,16 @@ const getGroupXCell = (): XCell => {
         },
         child: [],
       },
+      {
+        id: Guid.create(),
+        cell: {
+          text: 'some1',
+          type: CellType.Text,
+          dataType: DataType.Default, //横向布局为Default，纵向布局为List
+          span: 4, //根据需要调整
+        },
+        child: [],
+      },
     ],
   };
 };
@@ -103,7 +113,7 @@ const getItemStyle = (draggableStyle: any, isDragging: boolean): {} => ({
 const getListStyle = (isDraggingOver: boolean): {} => ({
   background: isDraggingOver ? 'lightblue' : 'lightgrey',
   padding: 0,
-  minHeight: 400,
+  minHeight: 60,
   margin: '0.5px',
   position: 'relative',
   height: 'auto',
@@ -123,6 +133,7 @@ export default class CellDesigner extends React.Component {
     let rootCell = getGroupXCell();
     rootCell.cell.text = '某某表格';
     rootCell.cell.type = CellType.Group;
+    rootCell.cell.dataType = DataType.Default;
     rootCell.cell.span = 24;
     rootCell.child = [];
     this.state.cell = rootCell;
@@ -207,23 +218,23 @@ export default class CellDesigner extends React.Component {
       return (
         <Draggable key={cell.id.toString()} draggableId={cell.id.toString()} index={index}>
           {(providedDraggable: DraggableProvided, snapshotDraggable: DraggableStateSnapshot) => (
-            <Row gutter={[1, 1]} key={cell.id.toString()}>
-              <Col span={cell.cell.span} key={cell.id.toString()}>
-                <div
-                  ref={providedDraggable.innerRef}
-                  {...providedDraggable.draggableProps}
-                  {...providedDraggable.dragHandleProps}
-                  style={getItemStyle(
-                    providedDraggable.draggableProps.style,
-                    snapshotDraggable.isDragging,
-                  )}
-                >
-                  {/* {cell.cell.render === undefined ? '' : cell.cell.render()} */}
+            <Col span={cell.cell.span} key={cell.id.toString()}>
+              <div
+                ref={providedDraggable.innerRef}
+                {...providedDraggable.draggableProps}
+                {...providedDraggable.dragHandleProps}
+                style={getItemStyle(
+                  providedDraggable.draggableProps.style,
+                  snapshotDraggable.isDragging,
+                )}
+              >
+                {/* {cell.cell.render === undefined ? '' : cell.cell.render()} */}
+                <Row gutter={[1, 1]} key={cell.id.toString()}>
                   {cell.cell.text}
-                </div>
-                {providedDraggable.placeholder}
-              </Col>
-            </Row>
+                </Row>
+              </div>
+              {providedDraggable.placeholder}
+            </Col>
           )}
         </Draggable>
       );
@@ -269,20 +280,48 @@ export default class CellDesigner extends React.Component {
                     snapshotDraggable.isDragging,
                   )}
                 >
-                  <Droppable key={cell.id.toString()} droppableId={cell.id.toString()}>
-                    {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
-                      <Row gutter={[1, 1]} key={cell.id.toString()}>
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          style={getListStyle(snapshot.isDraggingOver)}
+                  {cell.child.length === 0 ? (
+                    <Droppable key={cell.id.toString()} droppableId={cell.id.toString()}>
+                      {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                        <Row
+                          gutter={[1, 1]}
+                          key={cell.id.toString()}
+                          style={{ border: '1px dashed brown' }}
                         >
-                          {this.buildGroup(cell)}
-                        </div>
-                        {provided.placeholder}
-                      </Row>
-                    )}
-                  </Droppable>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            style={getListStyle(snapshot.isDraggingOver)}
+                          >
+                            <Col span={cell.cell.span}>{cell.cell.text}</Col>
+                            {provided.placeholder}
+                          </div>
+                        </Row>
+                      )}
+                    </Droppable>
+                  ) : (
+                    <Droppable key={cell.id.toString()} droppableId={cell.id.toString()}>
+                      {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                        <Row gutter={[1, 1]} key={cell.id.toString()}>
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            style={getItemStyle(
+                              providedDraggable.draggableProps.style,
+                              snapshotDraggable.isDragging,
+                            )}
+                          >
+                            <Col span={24}>
+                              {this.buildGroup(cell).map((item, index) => {
+                                return <Row key={index}>{item}</Row>;
+                              })}
+                              {provided.placeholder}
+                            </Col>
+                          </div>
+                        </Row>
+                      )}
+                    </Droppable>
+                  )}
                 </div>
                 {providedDraggable.placeholder}
               </Col>
@@ -317,8 +356,8 @@ export default class CellDesigner extends React.Component {
                             style={getListStyle(snapshot.isDraggingOver)}
                           >
                             <Col span={cell.cell.span}>{cell.cell.text}</Col>
+                            {provided.placeholder}
                           </div>
-                          {provided.placeholder}
                         </Row>
                       )}
                     </Droppable>
@@ -331,9 +370,11 @@ export default class CellDesigner extends React.Component {
                             {...provided.droppableProps}
                             style={getListStyle(snapshot.isDraggingOver)}
                           >
-                            {this.buildGroup(cell)}
+                            {this.buildGroup(cell).map((item, index) => {
+                              return <div key={cell.id.toString()}>{item}</div>;
+                            })}
+                            {provided.placeholder}
                           </div>
-                          {provided.placeholder}
                         </Row>
                       )}
                     </Droppable>
