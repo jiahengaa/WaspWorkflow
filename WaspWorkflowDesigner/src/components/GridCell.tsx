@@ -5,9 +5,21 @@ import { InputProps } from 'antd/lib/input';
 import { InputState } from 'antd/lib/input/Input';
 
 export enum CellType {
+  /**
+   *
+   */
   Text,
+  /**
+   *
+   */
   Group,
+  /**
+   *
+   */
   Custom,
+  /**
+   * 内部cell
+   */
   InnerCell,
 }
 
@@ -20,8 +32,6 @@ export class Cell {
   text?: string = '';
   dataType?: DataType = DataType.Default;
   type?: CellType = CellType.Text;
-  rowStart?: number = 0;
-  colStart?: number = 0;
   span?: number = 1;
   render?: Function;
   child?: Cell[] = [];
@@ -55,12 +65,7 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
     super(props);
   }
 
-  private preLevel: number = 0;
-  private level: number = 0;
-
   private buildGrid = (): JSX.Element => {
-    this.preLevel = 0;
-    this.level = 0;
     return this.buildCell(this.props.cell, 0);
   };
 
@@ -136,37 +141,13 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
   buildGroup = (cell: Cell): JSX.Element[] => {
     let content: JSX.Element[] = [];
     if (cell.child !== undefined) {
-      cell.child = cell.child
-        .sort((a, b) => {
-          return (
-            (a.rowStart === undefined ? 0 : a.rowStart) -
-            (b.rowStart === undefined ? 0 : b.rowStart)
-          );
-        })
-        .sort((c, d) => {
-          return (
-            (c.colStart === undefined ? 0 : c.colStart) -
-            (d.colStart === undefined ? 0 : d.colStart)
-          );
-        });
-      this.preLevel = this.level;
       cell.child.forEach((c, index) => {
         let curContent = this.buildCell(c, index);
 
         if (!(curContent instanceof String)) {
-          if (this.preLevel === this.level) {
-            if (cell.dataType === DataType.List) {
-              content.push(curContent);
-            } else {
-              content.push(curContent);
-            }
-          } else {
-            content.push(curContent);
-          }
+          content.push(curContent);
         }
       });
-
-      this.level++;
     }
 
     return content;
