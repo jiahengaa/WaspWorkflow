@@ -9,6 +9,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "strict": true,
+    "suppressImplicitAnyIndexErrors": true, //允许js中给空对象增加新属性写法
     "paths": {
       "@/*": ["src/*"]
     },

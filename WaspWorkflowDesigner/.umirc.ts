@@ -32,6 +32,10 @@ const config: IConfig = {
           component: './XTable',
         },
         {
+          path: '/DragListTest',
+          component: './DragListTest',
+        },
+        {
           path: '/',
           component: '../pages/index',
         },
