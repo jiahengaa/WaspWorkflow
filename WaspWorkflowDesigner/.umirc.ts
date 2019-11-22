@@ -36,6 +36,10 @@ const config: IConfig = {
           component: './DragListTest',
         },
         {
+          path: '/CellDesigner',
+          component: './CellDesigner',
+        },
+        {
           path: '/',
           component: '../pages/index',
         },

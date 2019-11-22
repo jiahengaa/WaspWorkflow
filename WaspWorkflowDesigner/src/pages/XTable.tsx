@@ -144,55 +144,53 @@ export default class XTable extends React.Component {
       ],
     });
 
+    let childTable = new Cell();
+    childTable.type = CellType.Group;
+    childTable.span = 24;
+    childTable.child = [];
+
+    this.state.dogFoods.forEach((f, index) => {
+      childTable.child?.push({
+        span: 24,
+        type: CellType.Group,
+        child: [
+          {
+            text: f.name.toString(),
+            span: 2,
+          },
+          {
+            text: f.type.toString(),
+            span: 4,
+          },
+          {
+            text: f.amount.toString(),
+            span: 4,
+          },
+          {
+            text: f.address.toString(),
+            span: 4,
+          },
+          {
+            text: f.tel.toString(),
+            span: 2,
+          },
+          {
+            text: f.desc.toString(),
+            span: 4,
+          },
+          {
+            text: f.bak.toString(),
+            span: 4,
+          },
+        ],
+      });
+    });
+
     this.state.cell.child.push({
       text: '第三栏：datalist',
       type: CellType.InnerCell,
       span: 24,
-      render: () => {
-        let childTable = new Cell();
-        childTable.type = CellType.Group;
-        childTable.span = 24;
-        childTable.child = [];
-
-        this.state.dogFoods.forEach((f, index) => {
-          childTable.child?.push({
-            span: 24,
-            type: CellType.Group,
-            child: [
-              {
-                text: f.name.toString(),
-                span: 2,
-              },
-              {
-                text: f.type.toString(),
-                span: 4,
-              },
-              {
-                text: f.amount.toString(),
-                span: 4,
-              },
-              {
-                text: f.address.toString(),
-                span: 4,
-              },
-              {
-                text: f.tel.toString(),
-                span: 2,
-              },
-              {
-                text: f.desc.toString(),
-                span: 4,
-              },
-              {
-                text: f.bak.toString(),
-                span: 4,
-              },
-            ],
-          });
-        });
-
-        return <GridCell cell={childTable} inner={true} />;
-      },
+      iCell: childTable,
     });
 
     this.state.cell.child.push({

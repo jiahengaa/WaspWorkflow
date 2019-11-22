@@ -6,19 +6,19 @@ import { InputState } from 'antd/lib/input/Input';
 
 export enum CellType {
   /**
-   *
+   * 文本cell，不能作为容器
    */
   Text,
   /**
-   *
+   * 容器cell，渲染其child
    */
   Group,
   /**
-   *
+   * 自定义cell，渲染render
    */
   Custom,
   /**
-   * 内部cell
+   * 内部cell，渲染内部表格
    */
   InnerCell,
 }
@@ -37,6 +37,7 @@ export class Cell {
   child?: Cell[] = [];
   className?: string = '';
   style?: CSSProperties;
+  iCell?: Cell;
 }
 
 // export class CellInput extends React.Component {
@@ -105,7 +106,9 @@ export class GridCell extends React.Component<{ cell: Cell; inner?: boolean }> {
     if (cell.type === CellType.InnerCell) {
       return (
         <Row gutter={[1, 1]} key={index}>
-          <div className={cell.className}>{cell.render === undefined ? '' : cell.render()}</div>
+          <div className={cell.className}>
+            <GridCell cell={cell.iCell as Cell} inner={true} />
+          </div>
         </Row>
       );
     }
